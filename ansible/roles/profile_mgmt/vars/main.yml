@@ -1,0 +1,7 @@
+---
+locfile_path: "/home/jaya/locfile"
+dest_path: "/tmp"
+file_owner: "jaya"
+file_group: "root"
+file_permissions: "0444"
+

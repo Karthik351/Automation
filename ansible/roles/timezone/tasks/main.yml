@@ -1,0 +1,9 @@
+---
+- name: Set time zone to America/Toronto on CentOS or RedHat
+  when: ansible_os_family == 'RedHat'
+  command: timedatectl set-timezone America/Toronto
+
+- name: Set time zone to America/Toronto on Debian or Ubuntu
+  when: ansible_os_family == 'Debian'
+  command: timedatectl set-timezone America/Toronto
+

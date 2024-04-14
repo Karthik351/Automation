@@ -1,0 +1,21 @@
+---
+- name: Check if a file exists on nodes in the Linux inventory group
+  hosts: linux
+  gather_facts: yes
+
+  tasks:
+    - name: Check if file exists
+      stat:
+        path: 
+      register: file_check
+
+    - name: Print message based on file existence
+      debug:
+        msg: "{{ inventory_hostname }} has n01605093 file"
+      when: file_check.stat.exists
+
+    - name: Print message for nodes without the file
+      debug:
+        msg: "{{ inventory_hostname }} does not have n01605093 file"
+      when: not file_check.stat.exists
+

@@ -1,0 +1,6 @@
+---
+package_list:
+  - rsync
+  - ldap-utils
+  - nis
+

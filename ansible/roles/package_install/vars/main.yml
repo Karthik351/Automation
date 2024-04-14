@@ -1,0 +1,7 @@
+---
+package_list:
+  - cifs-utils
+  - nfs-utils
+  - audit
+  - chrony
+

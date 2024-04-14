@@ -1,0 +1,27 @@
+---
+- name: Create an empty file on the automation machine
+  file:
+    path: "{{ locfile_path }}"
+    state: touch
+
+- name: Copy locfile to the managed nodes under /tmp directory
+  copy:
+    content: ""
+    dest: "{{ dest_path }}/locfile"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    mode: "{{ file_permissions }}"
+
+- name: Set SELinux file type to etc_t
+  sefcontext:
+    target: "{{ dest_path }}/locfile"
+    setype: etc_t
+
+- name: Display the status of /tmp/locfile
+  stat:
+    path: "{{ dest_path }}/locfile"
+
+- name: Create an empty file called emptyfile with default permissions and ownership
+  file:
+    path: "{{ dest_path }}/emptyfile"
+    state: touch

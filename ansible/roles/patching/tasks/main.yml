@@ -1,0 +1,23 @@
+---
+- name: Patching on CentOS or RedHat (become)
+  yum:
+    name: "*"
+    state: latest
+  when: ansible_os_family == "RedHat"
+  become: yes
+  become_user: root
+  register: patching_result
+
+- name: Wait for reboot if required
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    state: started
+    delay: 10
+  when: patching_result.changed
+
+- name: (Optional) Informational message about reboot
+  debug:
+    msg: "A reboot might be required after package updates."
+  when: patching_result.changed
+

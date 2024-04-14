@@ -1,0 +1,28 @@
+---
+- name: Create user accounts
+  hosts: linux-host1
+  become: yes
+  gather_facts: no
+
+  vars:
+    starting_uid: 5001
+    starting_gid: 5001
+    num_users: 10
+
+  tasks:
+    - name: Create user groups
+      group:
+        name: "user{{ item }}"
+        gid: "{{ starting_gid + (item | int) - 1 }}"
+      with_sequence: start="{{ starting_gid }}" end="{{ starting_gid + num_users - 1 }}"
+
+    - name: Create user accounts
+      user:
+        name: "user{{ item }}"
+        uid: "{{ starting_uid + (item | int) - 1 }}"
+        group: "user{{ item }}"
+        shell: /bin/bash
+        createhome: yes
+      with_sequence: start="{{ starting_uid }}" end="{{ starting_uid + num_users - 1 }}"
+
+

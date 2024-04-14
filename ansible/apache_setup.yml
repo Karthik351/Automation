@@ -1,0 +1,22 @@
+---
+- name: Install and configure Apache web server
+  hosts: linux-host1
+  become: yes
+  tasks:
+    - name: Install Apache web server
+      package:
+        name: "{{ 'apache2' if ansible_distribution == 'Ubuntu' else 'httpd' }}"
+        state: present
+
+    - name: Add hostname to index.html
+      lineinfile:
+        path: /var/www/html/index.html
+        line: "<h1>Hostname: {{ ansible_hostname }}</h1>"
+        create: yes
+
+    - name: Enable and start Apache service
+      service:
+        name: "{{ 'apache2' if ansible_distribution == 'Ubuntu' else 'httpd' }}"
+        enabled: yes
+        state: started
+

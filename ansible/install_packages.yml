@@ -1,0 +1,31 @@
+---
+- name: Install packages if / filesystem meets conditions
+  hosts: linux-host2
+  gather_facts: yes
+
+  vars:
+    required_free_space: 2000000000 # 2GB in bytes
+    packages:
+      - mariadb
+      - dracut
+      - snappy
+
+  tasks:
+    - name: Check if / filesystem is mounted and has enough free space
+      block:
+        - assert:
+            that:
+              - ansible_mounts | selectattr('mount', '==', '/') | list | first.size_available|int >= required_free_space
+              - ansible_mounts | selectattr('mount', '==', '/') | list | first.size_available is defined
+            msg: "Insufficient disk space on / filesystem or it's not mounted"
+      rescue:
+        - name: Print error message
+          debug:
+            msg: "Failed to install packages due to insufficient disk space or / filesystem not mounted"
+          when: ansible_mounts | selectattr('mount', '==', '/') | list == []
+        - meta: end_play
+
+    - name: Install required packages
+      package:
+        name: "{{ packages }}"
+        state: present

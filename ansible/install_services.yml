@@ -1,0 +1,44 @@
+---
+- name: Install and configure Apache web server and MariaDB server
+  hosts: linux-host2
+  become: yes
+  tasks:
+    - name: Install Apache web server
+      package:
+        name: "{{ 'apache2' if ansible_distribution == 'Ubuntu' else 'httpd' }}"
+        state: present
+
+    - name: Install MariaDB server
+      package:
+        name: "{{ 'mariadb-server' if ansible_distribution == 'Ubuntu' else 'mysql-server' }}"
+        state: present
+    - name: Enable and start Apache service
+      service:
+        name: "{{ 'apache2' if ansible_distribution == 'Ubuntu' else 'httpd' }}"
+        enabled: yes
+        state: started
+    - name: Enable and start MariaDB service
+      service:
+        name: "{{ 'mysql' if ansible_distribution == 'Ubuntu' else 'mariadb' }}"
+        enabled: yes
+        state: started
+- name: Display operating state of Apache and MariaDB services
+  hosts: linux-host2
+  tasks:
+    - name: Display Apache service status
+      command: systemctl status "{{ 'apache2' if ansible_distribution == 'Ubuntu' else 'httpd' }}"
+      register: apache_status
+      changed_when: false
+      failed_when: false
+    - name: Display MariaDB service status
+      command: systemctl status "{{ 'mysql' if ansible_distribution == 'Ubuntu' else 'mariadb' }}"
+      register: mariadb_status
+      changed_when: false
+      failed_when: false
+    - name: Print Apache service status
+      debug:
+        msg: "{{ apache_status.stdout_lines }}"
+
+    - name: Print MariaDB service status
+      debug:
+        msg: "{{ mariadb_status.stdout_lines }}"

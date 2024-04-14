@@ -1,0 +1,30 @@
+---
+- name: Run package_remove role
+  hosts: linux-host1
+  roles:
+    - package_remove
+
+- name: Run package_install role
+  hosts: linux-host1
+  roles:
+    - package_install
+
+- name: Run patching role
+  hosts: linux-host1
+  roles:
+    - patching
+
+- name: Run profile_mgmt role
+  hosts: linux-host1
+  roles:
+    - profile_mgmt
+
+- name: Run timezone role
+  hosts: linux-host1
+  roles:
+    - timezone
+
+- name: Run syslog_updates role
+  hosts: linux-host1
+  roles:
+    - syslog_updates

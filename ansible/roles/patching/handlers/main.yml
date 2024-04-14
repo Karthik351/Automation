@@ -1,0 +1,4 @@
+- name: Reboot after patching (optional)
+  reboot:
+    state: rebooted
+  when: ansible_reboot_required

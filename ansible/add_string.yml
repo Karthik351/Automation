@@ -1,0 +1,19 @@
+---
+- name: Add string to file based on conditions
+  hosts: linux-host1
+  gather_facts: yes
+
+  tasks:
+    - name: Gather facts
+      setup:
+
+    - name: Add string to file if conditions are met
+      blockinfile:
+        path: /tmp/conditional
+        block: |
+          This is my CentOS VM
+      when:
+        - ansible_facts['distribution'] == 'RedHat'   # Checking if the distribution is RHEL
+        - ansible_facts['distribution_version'] == '8.2'   # Checking if the RHEL version is 8.2
+        - ansible_facts['kernel'] == '4.18.0-193.el8.x86_64'   # Checking if the kernel version is 4.18.0-193.el8.x86_64
+
